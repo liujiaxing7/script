@@ -111,8 +111,8 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--area', type=int, default="468")
-    parser.add_argument('--input_dir', type=str, default="/home/fandong/data3/anno")
-    parser.add_argument('--output_dir', type=str, default="/home/fandong/data3/anno2")
+    parser.add_argument('--input_dir', type=str, default="/mnt/sdb1/ICE_data_img/anno1")
+    parser.add_argument('--output_dir', type=str, default="/mnt/sdb1/ICE_data_img/anno3")
     args=parser.parse_args()
 
     xml_path_list = get_xml(args.input_dir)

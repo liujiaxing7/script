@@ -11,8 +11,8 @@ from models import *
 def GetArgs():
     parser = argparse.ArgumentParser(description="",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument("--cfg", type=str,default='prune80_V101.cfg', help="onnx model file")
-    parser.add_argument("--model", type=str,default='best.pt', help="image file")
+    parser.add_argument("--cfg", type=str,default='V1021.cfg', help="onnx model file")
+    parser.add_argument("--model", type=str,default='yolov3_ckpt_69_01051646.pth', help="image file")
     parser.add_argument("--input_size", type=int,default=416, help="input size of image for net")
 
     args = parser.parse_args()
@@ -21,13 +21,13 @@ def GetArgs():
 if __name__ == '__main__':
     args = GetArgs()
     input_file = args.model
-    output_file = "hjhhhhh.onnx"
+    output_file = "V1023.onnx"
     # cfg.merge_from_file(args.cfg)
     input_size = args.input_size
 
     # cfg.merge_from_file('configs/mobilenet_v2_ssd320_voc0712.yaml')
     net = Darknet(args.cfg)
-    params = torch.load(input_file, map_location=lambda storage, loc: storage)['model']
+    params = torch.load(input_file, map_location=lambda storage, loc: storage)
     net.load_state_dict(params,False)
 
     device = torch.device("cuda:0") #  if args.use_gpu else "cpu")
