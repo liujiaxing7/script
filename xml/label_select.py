@@ -129,7 +129,9 @@ if __name__ == "__main__":
         # Find annotations.
         Object = root.findall('object')
         for i in range(len(Object)):
-            if str(Object[i].find('name').text) == 'person':
+            if str(Object[i].find('name').text) == 'person' or str(Object[i].find('name').text) == 'cat' or str(Object[i].find('name').text) == 'dog':
+                continue
+            else:
             # ymin=int(Object[i].find('bndbox').find('ymin').text) # 修改节点文本
             # xmin=int(Object[i].find('bndbox').find('xmin').text)
             # ymax=int(Object[i].find('bndbox').find('ymax').text)

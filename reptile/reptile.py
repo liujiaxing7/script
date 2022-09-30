@@ -35,7 +35,8 @@ def get_selector_content(url,headers_update=None,selector=None):
 if __name__ == '__main__':
     page = 0
     for a in range(7):
-        url = f"https://image.baidu.com/search/acjson?tn=resultjson_com&logid=11180288326636287564&ipn=rj&ct=201326592&is=&fp=result&fr=&word=%E6%B8%85%E6%B4%81%E6%9C%BA%E5%99%A8%E4%BA%BA&queryWord=%E6%B8%85%E6%B4%81%E6%9C%BA%E5%99%A8%E4%BA%BA&cl=2&lm=-1&ie=utf-8&oe=utf-8&adpicid=&st=-1&z=&ic=&hd=&latest=&copyright=&s=&se=&tab=&width=&height=&face=0&istype=2&qc=&nc=1&expermode=&nojc=&isAsync=&pn={page}&rn=30&gsm=78&1652074678117="
+        # url = f"https://image.baidu.com/search/acjson?tn=resultjson_com&logid=11180288326636287564&ipn=rj&ct=201326592&is=&fp=result&fr=&word=%E6%B8%85%E6%B4%81%E6%9C%BA%E5%99%A8%E4%BA%BA&queryWord=%E6%B8%85%E6%B4%81%E6%9C%BA%E5%99%A8%E4%BA%BA&cl=2&lm=-1&ie=utf-8&oe=utf-8&adpicid=&st=-1&z=&ic=&hd=&latest=&copyright=&s=&se=&tab=&width=&height=&face=0&istype=2&qc=&nc=1&expermode=&nojc=&isAsync=&pn={page}&rn=30&gsm=78&1652074678117="
+        url = f"https://www.google.com.hk/_/VisualFrontendUi/browserinfo?f.sid=-4922643655468421435&bl=boq_visualfrontendserver_20220508.20_p0&hl=zh-CN&authuser&soc-app=162&soc-platform=1&soc-device=1&_reqid=44200&rt=j"
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36'
         }
