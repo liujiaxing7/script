@@ -1,11 +1,6 @@
-##args:
-input：机器拍摄的原图路径   
-output_dir：去畸变图像存放地址   
-flip：图像反转   
-module：机器采集的结构为gray/cam0，gray/cam1，rgb/cam0时需要打开    
-
 ##run
+```python
+python main --input /mnt/sdb2/dataset/20221011_table/labeled_ok/VOC/JPEGImages/20220916_hightligt
 ```
-python main.py --input input_path --output_dir output_path  --module true
 
-```
+其中，文件需要以VOC格式命名，包含JPEGImages和labels，JPEGImages下包含config.yaml。最终生成labels_distort文件夹
