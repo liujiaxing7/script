@@ -80,18 +80,34 @@ def GetDarknetLabels(img, ann_file, fisheye_x, fisheye_y):
             box_distort = []
             xmin = i[1] * width - i[3] * width / 2
             xmax = xmin + i[3] * width
+            xmed = (xmax - xmin) / 2.0
             ymin = i[2] * height - i[4] * height / 2
             ymax = ymin + i[4] * height
+            ymed = (ymax - ymin) / 2.0
 
             xmin_dis = fisheye_x[int(ymin), int(xmin)]
             xmax_dis = fisheye_x[int(ymax), int(xmax)]
+            xmed_top_x = fisheye_x[int(ymin), int(xmed)]
+            xmed_right_x = fisheye_x[int(ymed), int(xmax)]
+            xmed_bottom_x = fisheye_x[int(ymax), int(xmed)]
+            xmed_left_x = fisheye_x[int(ymed), int(xmin)]
+
             ymin_dis = fisheye_y[int(ymin), int(xmin)]
             ymax_dis = fisheye_y[int(ymax), int(xmax)]
+            ymed_top_y = fisheye_y[int(ymin), int(xmed)]
+            ymed_right_y = fisheye_y[int(ymed), int(xmax)]
+            ymed_bottom_y = fisheye_y[int(ymax), int(xmed)]
+            ymed_left_y = fisheye_y[int(ymed), int(xmin)]
 
-            x_distort_center = ((xmax_dis + xmin_dis) / 2.0) / width
-            y_distort_center = ((ymax_dis + ymin_dis) / 2.0) / height
-            w_distort = (xmax_dis - xmin_dis) / width
-            h_distort = (ymax_dis - ymin_dis) / height
+            xminest=min(xmin_dis,xmax_dis,xmed_top_x,xmed_bottom_x,xmed_left_x,xmed_right_x)
+            yminest=min(xmin_dis,xmax_dis,xmed_top_x,xmed_bottom_x,xmed_left_x,xmed_right_x)
+            xmaxest=max(ymin_dis,ymax_dis,ymed_top_y,ymed_bottom_y,ymed_left_y,ymed_right_y)
+            ymaxest=max(ymin_dis,ymax_dis,ymed_top_y,ymed_bottom_y,ymed_left_y,ymed_right_y)
+
+            x_distort_center = ((xmaxest + xminest) / 2.0) / width
+            y_distort_center = ((ymaxest + yminest) / 2.0) / height
+            w_distort = (xmaxest - xminest) / width
+            h_distort = (ymaxest - yminest) / height
 
             box_distort.extend([int(i[0]), x_distort_center, y_distort_center, w_distort, h_distort])
             if not len(i) == 5:
