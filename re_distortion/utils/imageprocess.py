@@ -80,10 +80,15 @@ def GetDarknetLabels(img, ann_file, fisheye_x, fisheye_y):
             box_distort = []
             xmin = i[1] * width - i[3] * width / 2
             xmax = xmin + i[3] * width
-            xmed = (xmax - xmin) / 2.0
             ymin = i[2] * height - i[4] * height / 2
             ymax = ymin + i[4] * height
-            ymed = (ymax - ymin) / 2.0
+            xmin = np.clip(xmin,0,640)
+            xmax = np.clip(xmax,0,640)
+            ymin = np.clip(ymin,0,400)
+            ymax = np.clip(ymax,0,400)
+
+            xmed = (xmax + xmin) / 2.0
+            ymed = (ymax + ymin) / 2.0
 
             xmin_dis = fisheye_x[int(ymin), int(xmin)]
             xmax_dis = fisheye_x[int(ymax), int(xmax)]
@@ -100,9 +105,12 @@ def GetDarknetLabels(img, ann_file, fisheye_x, fisheye_y):
             ymed_left_y = fisheye_y[int(ymed), int(xmin)]
 
             xminest=min(xmin_dis,xmax_dis,xmed_top_x,xmed_bottom_x,xmed_left_x,xmed_right_x)
-            yminest=min(xmin_dis,xmax_dis,xmed_top_x,xmed_bottom_x,xmed_left_x,xmed_right_x)
-            xmaxest=max(ymin_dis,ymax_dis,ymed_top_y,ymed_bottom_y,ymed_left_y,ymed_right_y)
+            xmaxest=max(xmin_dis,xmax_dis,xmed_top_x,xmed_bottom_x,xmed_left_x,xmed_right_x)
+            yminest=min(ymin_dis,ymax_dis,ymed_top_y,ymed_bottom_y,ymed_left_y,ymed_right_y)
             ymaxest=max(ymin_dis,ymax_dis,ymed_top_y,ymed_bottom_y,ymed_left_y,ymed_right_y)
+
+            if (ymaxest - ymax_dis) > 20 :
+                print(ann_file+"  :  "+str(ymaxest - ymax_dis))
 
             x_distort_center = ((xmaxest + xminest) / 2.0) / width
             y_distort_center = ((ymaxest + yminest) / 2.0) / height
@@ -124,7 +132,7 @@ def GetDarknetLabels(img, ann_file, fisheye_x, fisheye_y):
         # print("ymin:", fisheye_y[182, 284])
         # print("ymax:", fisheye_y[286, 389])
 
-    return box_distort
+    return 0
 
 
 def ReadPara(file, scale):
