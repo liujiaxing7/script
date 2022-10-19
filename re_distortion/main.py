@@ -85,34 +85,35 @@ def main():
             count = 0
             for f in tqdm(files):
                 image = cv2.imread(f)
-                if image is None:
-                    print("image is empty :", f)
-                    continue
-
-                if args.module:
-                    if 'rgb' in f:
-                        imageRemap = image
-                    elif 'cam0' in f:
-                        imageRemap = RemapFile(image, fisheye_x_l, fisheye_y_l, f)
-                    elif 'cam1' in f:
-                        imageRemap = RemapFile(image, fisheye_x_r, fisheye_y_r, f)
-                else:
-                    imageRemap = RemapFile(image, fisheye_x_l, fisheye_y_l, f)
+                imageRemap = image
+                # if image is None:
+                #     print("image is empty :", f)
+                #     continue
+                #
+                # if args.module:
+                #     if 'rgb' in f:
+                #         imageRemap = image
+                #     elif 'cam0' in f:
+                #         imageRemap = RemapFile(image, fisheye_x_l, fisheye_y_l, f)
+                #     elif 'cam1' in f:
+                #         imageRemap = RemapFile(image, fisheye_x_r, fisheye_y_r, f)
+                # else:
+                #     imageRemap = RemapFile(image, fisheye_x_l, fisheye_y_l, f)
 
                 # if imageRemap is None:
                 #     print(f)
                 #     continue
                 #
-                # if args.flip:
-                #     imageFilp = Filp(imageRemap)
-                # else:
-                #     imageFilp = imageRemap
+                if args.flip:
+                    imageFilp = Filp(imageRemap)
+                else:
+                    imageFilp = imageRemap
                 #
-                # WriteImage(imageFilp, f, args.output_dir , root)
-                # count += 1
-                # if count > 1000:
-                #     os.system('sync')
-                #     count = 0
+                WriteImage(imageFilp, f, args.output_dir , root)
+                count += 1
+                if count > 1000:
+                    os.system('sync')
+                    count = 0
 
 
 
