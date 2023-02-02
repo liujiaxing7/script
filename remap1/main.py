@@ -79,6 +79,8 @@ def main():
             config_file = os.path.join(args.input, CONFIG_FILE)
             if not os.path.exists(config_file):
                 config_file = os.path.join(d, CONFIG_FILE)
+            if not os.path.exists(config_file) and len(files) == 0:
+                continue
             fisheye_x_l, fisheye_y_l, fisheye_x_r, fisheye_y_r = ReadPara(config_file, args.module)
 
             count = 0
