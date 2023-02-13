@@ -8,7 +8,7 @@ import cv2
 import shutil
 
 # labelme_path = '/home/walt/Downloads/dataset/已标注-11/dev/shm/1672670153410605_bea9298c-3371-4f99-98f7-b271859acf11/1591039045110456321/'
-labelme_path = '/mnt/sdb2/dataset/20230208/dev/shm/1675072906072340_9e716794-a2b2-49f0-a5fa-0965fbd86ecd/1608343461408632833/'
+labelme_path = '/mnt/sdb2/dataset/20230210/第1批/shm/1675929455170143_47bc5fa0-c901-450d-94ab-e7f5f1377bef/1623127369685729282/第一批桌子/cameradata-2/'
 saved_path = '/mnt/sdb2/dataset/20230208/dev/xml'
 
 from functools import reduce
@@ -36,16 +36,17 @@ with codecs.open(labelme_path + "xml" + ".xml", "w", "utf-8") as xml:
         fileName = json_file["image_name"]
         if "-" in fileName:
             fileName = fileName.split(' ')[0]
-
-        xml.write('\t<image' + " file ='" + str(fileName)  + "'>\n")
+            xml.write('\t<image' + " file ='" + str(fileName) + ".jpg"+ "'>\n")
+        else:
+            xml.write('\t<image' + " file ='" + str(fileName)  + "'>\n")
 
         # cubePoints是一个数组，数组每一项是一个字典{x:  ,y:  }
-        point_x_list = []
-        point_y_list = []
-        point_list = []
         top, left, width, height = 0, 0, 0, 0
         if "cubePoints" in json_file:
             for pointInLists in json_file['cubePoints']:
+                point_x_list = []
+                point_y_list = []
+                point_list = []
                 '''
                 int()函数是可以将字符串转换为整形，但是这个字符串如果是带小数得,就会转换报错
                 '''
@@ -74,15 +75,15 @@ with codecs.open(labelme_path + "xml" + ".xml", "w", "utf-8") as xml:
                 point_max_y = point_list_desk[point_list_desk[:,1].argsort()][0]
                 point_max_y_index = coords_sorted.index(point_max_y.tolist())
 
-                distance1 = abs(coords_sorted[(point_max_y_index + 1)%len(coords_sorted)][0]-coords_sorted[(point_max_y_index + 2)%len(coords_sorted)][0])
-                distance2 = abs(coords_sorted[(point_max_y_index + 2)%len(coords_sorted)][0]-coords_sorted[(point_max_y_index + 3)%len(coords_sorted)][0])
+                distance1 = max(coords_sorted[(point_max_y_index + 1)%len(coords_sorted)][0]-coords_sorted[(point_max_y_index + 2)%len(coords_sorted)][0], 0)
+                distance2 = max(coords_sorted[(point_max_y_index + 2)%len(coords_sorted)][0]-coords_sorted[(point_max_y_index + 3)%len(coords_sorted)][0], 0)
 
-                if abs(distance1 - distance2)>35:
-                    if distance1 >= distance2:
-                        point0 = coords_sorted[(point_max_y_index + 1)%len(coords_sorted)]
-                    else:
-                        point0 = coords_sorted[(point_max_y_index + 2)%len(coords_sorted)]
-                else: point0 = coords_sorted[(point_max_y_index + 1)%len(coords_sorted)]
+                # if abs(distance1 - distance2)>35:
+                if distance1 >= distance2:
+                    point0 = coords_sorted[(point_max_y_index + 1)%len(coords_sorted)]
+                else:
+                    point0 = coords_sorted[(point_max_y_index + 2)%len(coords_sorted)]
+                # else: point0 = coords_sorted[(point_max_y_index + 1)%len(coords_sorted)]
 
 
 
@@ -109,7 +110,7 @@ with codecs.open(labelme_path + "xml" + ".xml", "w", "utf-8") as xml:
                     index += 1
 
                 xml.write('\t\t</box>\n')
-                xml.write('\t</image>\n')
+            xml.write('\t</image>\n')
     xml.write('</images>\n')
     xml.write('</dataset>\n')
 

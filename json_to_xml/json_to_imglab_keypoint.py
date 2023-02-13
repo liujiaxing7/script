@@ -36,12 +36,13 @@ with codecs.open(labelme_path + "xml" + ".xml", "w", "utf-8") as xml:
         xml.write('\t<image' + " file ='" + str(fileName)  + "'>\n")
 
         # cubePoints是一个数组，数组每一项是一个字典{x:  ,y:  }
-        point_x_list = []
-        point_y_list = []
-        point_list = []
+
         top, left, width, height = 0, 0, 0, 0
         if "cubePoints" in json_file:
             for pointInLists in json_file['cubePoints']:
+                point_x_list = []
+                point_y_list = []
+                point_list = []
                 '''
                 int()函数是可以将字符串转换为整形，但是这个字符串如果是带小数得,就会转换报错
                 '''
@@ -99,7 +100,7 @@ with codecs.open(labelme_path + "xml" + ".xml", "w", "utf-8") as xml:
                     index += 1
 
                 xml.write('\t\t</box>\n')
-                xml.write('\t</image>\n')
+            xml.write('\t</image>\n')
     xml.write('</images>\n')
     xml.write('</dataset>\n')
 

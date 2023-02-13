@@ -27,8 +27,8 @@ def Walk(path, suffix:list):
 
     return file_list
 
-labelme_path = '/mnt/sdb2/dataset/20230119/桌子'
-saved_path = '/mnt/sdb2/dataset/20230119/桌子/xml'
+labelme_path = '/mnt/sdb2/dataset/20230210/JPEGImages/'
+saved_path = '/mnt/sdb2/dataset/20230210/JPEGImages/xml'
 # 3.获取待处理文件
 # files = glob(labelme_path + "*.json")
 files = Walk(labelme_path, ['json'])
