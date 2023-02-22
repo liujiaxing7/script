@@ -85,6 +85,7 @@ def main():
 
             count = 0
             for f in tqdm(files):
+
                 image = cv2.imread(f)
                 if image is None:
                     print("image is empty :", f)
@@ -98,7 +99,12 @@ def main():
                     elif 'cam1' in f:
                         imageRemap = RemapFile(image, fisheye_x_r, fisheye_y_r)
                 else:
-                    imageRemap = RemapFile(image, fisheye_x_l, fisheye_y_l)
+                    if 'rgb' in f:
+                        imageRemap = image
+                    elif 'cam0' in f:
+                        imageRemap = RemapFile(image, fisheye_x_l, fisheye_y_l)
+                    elif 'cam1' in f:
+                        imageRemap = RemapFile(image, fisheye_x_r, fisheye_y_r)
 
                 if imageRemap is None:
                     print(f)
