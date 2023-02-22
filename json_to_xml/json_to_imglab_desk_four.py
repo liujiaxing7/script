@@ -10,8 +10,12 @@ import cv2
 import shutil
 
 # labelme_path = '/home/walt/Downloads/dataset/已标注-11/dev/shm/1672670153410605_bea9298c-3371-4f99-98f7-b271859acf11/1591039045110456321/'
-labelme_path = '/mnt/sdb1/datasets/20230221/第19批/20230221'
-saved_path = '/mnt/sdb1/datasets/20230219_batch12_15/第12批/20230210/xml/'
+labelme_path = '/mnt/sdb1/datasets/20230214_10_yanshou/img/'
+saved_path = '/mnt/sdb2/dataset/20230208/dev/xml'
+
+from functools import reduce
+import operator
+import math
 
 
 # 文件计数器
@@ -39,7 +43,6 @@ def Walk(path, suffix:list):
 with codecs.open(labelme_path + "xml" + ".xml", "w", "utf-8") as xml:
     # 3.获取待处理文件
     files = Walk(labelme_path, ['json'])
-    # files = glob(labelme_path + "*.json")
     print(files)
     # 4.读取标注信息并写入 xml
     xml.write('<dataset>\n')
@@ -53,42 +56,45 @@ with codecs.open(labelme_path + "xml" + ".xml", "w", "utf-8") as xml:
         fileName = json_file["image_name"]
         if "-" in fileName:
             fileName = fileName.split(' ')[0]
-
-        xml.write('\t<image' + " file ='" + str(fileName) + "'>\n")
+            xml.write('\t<image' + " file ='" + str(fileName) + ".jpg"+ "'>\n")
+        else:
+            xml.write('\t<image' + " file ='" + str(fileName)  + "'>\n")
 
         # cubePoints是一个数组，数组每一项是一个字典{x:  ,y:  }
-
         top, left, width, height = 0, 0, 0, 0
-        # if "cubePoints" in json_file:
-
-        #     for pointInList in json_file['cubePoints']:
         if "cubePoints" in json_file:
             for pointInLists in json_file['cubePoints']:
                 point_x_list = []
                 point_y_list = []
+                point_list = []
                 '''
                 int()函数是可以将字符串转换为整形，但是这个字符串如果是带小数得,就会转换报错
                 '''
                 for pointInList in pointInLists:
-                    '''
-                    int()函数是可以将字符串转换为整形，但是这个字符串如果是带小数得,就会转换报错
-                    '''
                     pointX = int(float(pointInList["x"]))
                     pointY = int(float(pointInList["y"]))
-                    point_x_list.append(pointX)
-                    point_y_list.append(pointY)
-            # np.argsort(point_x_list)
-            # np.argsort(point_y_list)
-            # 不能使用= 进行直接复制，复制的是list的地址，这两个列表是完全等价的，修改其中任何一个列表都会影响到另一个列表。
-            # 使用copy进行浅拷贝（因为只有一层，无需深拷贝）
+                    point_list.append([pointX, pointY])
+
+                point_x_list = np.array(point_list)[:, 0].tolist()
+                point_y_list = np.array(point_list)[:, 1].tolist()
                 point_x_list2 = point_x_list.copy()
                 point_y_list2 = point_y_list.copy()
                 point_x_list.sort()
                 point_y_list.sort()
+
                 top = point_y_list[0]
                 left = point_x_list[0]
                 width = point_x_list[-1] - left
                 height = point_y_list[-1] - top
+
+                point_desk_leg = []
+                index=0
+                for pointInList in pointInLists:
+                    if index > 3:
+                        pointX_leg = int(float(pointInList["x"]))
+                        pointY_leg = int(float(pointInList["y"]))
+                        point_desk_leg.append([pointX_leg, pointY_leg])
+                    index+=1
 
                 # <box top='100' left='5' width='387' height='296'>
                 xml.write('\t\t<box' + " top='" + str(top) + "' left='" + str(left) + "' width='" + str(width) + "' height='" + str(height) + "'>\n")
@@ -96,8 +102,8 @@ with codecs.open(labelme_path + "xml" + ".xml", "w", "utf-8") as xml:
                 xml.write('\t\t\t<label>unlabelled</label>\n')
 
                 # <part name='0' x='114' y='16'/>
-                for index in range(len(point_x_list)):
-                    xml.write('\t\t\t<part ' + "name='" + str(index) + "' x='" + str(point_x_list2[index]) + "' y='" + str(point_y_list2[index]) + "'/>\n")
+                for index in range(len(point_desk_leg)):
+                    xml.write('\t\t\t<part ' + "name='" + str(index) + "' x='" + str(point_desk_leg[index][0]) + "' y='" + str(point_desk_leg[index][1]) + "'/>\n")
                     index += 1
 
                 xml.write('\t\t</box>\n')
