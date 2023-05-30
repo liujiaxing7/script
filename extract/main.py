@@ -1,23 +1,15 @@
 #!/usr/bin/python3 python
 # encoding: utf-8
-'''
-@author: 孙昊
-@contact: smartadpole@163.com
-@file: main.py
-@time: 2021/3/29 下午3:14
-@desc: 
-'''
+
 import sys, os
 import cv2
 import numpy as np
 from tqdm import tqdm
-import shutil
 
 CURRENT_DIR = os.path.dirname(__file__)
 sys.path.append(os.path.join(CURRENT_DIR, '../../'))
 
 import argparse
-from utils.imageprocess import Remap, ReadPara
 from utils.file import MkdirSimple, Walk
 
 CONFIG_FILE = 'config.yaml'
@@ -32,31 +24,6 @@ def GetArgs():
 
     args = parser.parse_args()
     return args
-
-
-def Filp(image):
-    imageFilp = image[::-1, ::-1, :]
-    return  imageFilp
-
-def RemapFile(image, fisheye_x, fisheye_y, f, flip):
-    imageRemap = Remap(image, fisheye_x, fisheye_y, f, flip)
-    # view = np.hstack((image, imageRemap))
-
-    # cv2.namedWindow("remap")
-    # cv2.imshow("remap", view)
-    # cv2.waitKey(0)
-
-    return imageRemap
-
-def WriteImage(image, file, output_dir, root_len):
-    if output_dir is not None:
-        sub_path = file[root_len+1:]
-        output_file = os.path.join(output_dir, sub_path)
-        MkdirSimple(output_file)
-        cv2.imwrite(output_file, image)
-
-def WriteLabels():
-    pass
 
 def img2label_paths(img_paths):
     # Define label paths as a function of image paths
@@ -83,6 +50,7 @@ def GetDarknetLabels(img, ann_file, img_path):
     height = np.array(img).shape[0]
 
     for i in box_label:
+
         if not i[0] == 7:
             continue
 
@@ -96,10 +64,16 @@ def GetDarknetLabels(img, ann_file, img_path):
         ymin = int(np.clip(ymin, 0, 399))
         ymax = int(np.clip(ymax, 0, 399))
 
+        #外扩截取:
+        xmin = np.clip(xmin, 0, 639)
+        ymin = np.clip(ymin, 0, 639)
+        xmax = np.clip(xmax, 0, 639)
+        ymax = np.clip(ymax, 0, 639)
+
 
         crop_img = img[ymin:ymax, xmin:xmax]
-        save_path = img_path.replace("JPEGImages", "JPEGImages_extract")
-        ann_file_savepath = ann_file.replace("labels", "labels_extract")
+        save_path = img_path.replace("JPEGImages", "JPEGImages_scale_out")
+        ann_file_savepath = ann_file.replace("labels", "labels_scale_out")
 
         if not os.path.exists(os.path.split(save_path)[0]):
             os.makedirs(os.path.split(save_path)[0])
@@ -121,7 +95,7 @@ def GetDarknetLabels(img, ann_file, img_path):
         try:
             cv2.imwrite(save_path, crop_img)
         except:
-            # print(img_path)
+            print(img_path)
             continue
 
     return 0
@@ -140,7 +114,6 @@ def main():
         print("in dir: ", d)
         files = Walk(d, ['jpg', 'png'])
 
-        count = 0
         for f in tqdm(files):
             image = cv2.imread(f)
             labels_file = img2label_paths([f])
