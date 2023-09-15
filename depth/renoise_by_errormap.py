@@ -34,7 +34,7 @@ def mask(input_path, disp_path, output_path):
     file_list_disp = Walk(disp_path, ['jpg', 'jpeg', 'png', 'bmp'])
 
     for img_file , img_file_disp in zip(sorted(file_list), sorted(file_list_disp)):
-        img_file_disp_save = output_path + img_file_disp.split("/", 6)[-1]
+        img_file_disp_save = output_path + img_file_disp.split("/", -4)[-1]
         image_ori = cv2.imread(img_file, -1)
         image_disp = cv2.imread(img_file_disp, -1)
 
