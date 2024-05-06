@@ -6,6 +6,6 @@ module：机器采集的结构为gray/cam0，gray/cam1，rgb/cam0时需要打开
 
 ##run
 ```
-python main.py --input input_path --output_dir output_path  --module true
+python main.py --input input_path --output_dir output_path 
 
 ```
