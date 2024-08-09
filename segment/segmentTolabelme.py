@@ -1,7 +1,6 @@
 import os
 import json
 
-
 def convert_to_labelme_format(input_data):
     shapes = []
     for region in input_data['region']:
@@ -25,14 +24,17 @@ def convert_to_labelme_format(input_data):
 
         shapes.append(shape)
 
+    # Extract image size from 'rle'
+    image_height, image_width = input_data['region'][0]['rle']['size']
+
     labelme_format = {
         "version": "4.5.6",
         "flags": {},
         "shapes": shapes,
         "imagePath": input_data['file']['name'],
         "imageData": None,
-        "imageHeight": 1024,  # Assumes fixed height, update as needed
-        "imageWidth": 1024  # Assumes fixed width, update as needed
+        "imageHeight": image_height,  # Dynamically read height
+        "imageWidth": image_width  # Dynamically read width
     }
 
     return labelme_format
@@ -56,7 +58,7 @@ def process_directory(input_dir, output_dir):
                 json.dump(labelme_data, outfile, ensure_ascii=False, indent=4)
 
 if __name__ == "__main__":
-    input_directory = "/work/datasets/RUBBY/20240718_purchase/20240718/7.18数据5809/障碍物/"
-    output_directory = "/work/datasets/RUBBY/20240718_purchase/20240718/labelme/障碍物/"
+    input_directory = "/work/datasets/RUBBY/20240718_purchase/20240808/8.7筛图数据53011/2/房屋环境/"
+    output_directory = "/work/datasets/RUBBY/20240718_purchase/20240808/xml/"
 
     process_directory(input_directory, output_directory)
