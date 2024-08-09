@@ -1,8 +1,9 @@
 import os
 import json
 
-def convert_to_labelme_format(input_data):
+def convert_to_labelme_format(input_data, input_path):
     shapes = []
+    image_height, image_width = 1024, 1024
     for region in input_data['region']:
         if 'points' not in region['coordinates']:
             continue  # Skip this region if 'points' key is missing
@@ -24,8 +25,11 @@ def convert_to_labelme_format(input_data):
 
         shapes.append(shape)
 
-    # Extract image size from 'rle'
-    image_height, image_width = input_data['region'][0]['rle']['size']
+        try:
+            # Extract image size from 'rle'
+            image_height, image_width = region['rle']['size']
+        except:
+            print(input_path)
 
     labelme_format = {
         "version": "4.5.6",
@@ -52,13 +56,13 @@ def process_directory(input_dir, output_dir):
             with open(input_path, 'r', encoding='utf-8') as infile:
                 input_data = json.load(infile)
 
-            labelme_data = convert_to_labelme_format(input_data)
+            labelme_data = convert_to_labelme_format(input_data, input_path)
 
             with open(output_path, 'w', encoding='utf-8') as outfile:
                 json.dump(labelme_data, outfile, ensure_ascii=False, indent=4)
 
 if __name__ == "__main__":
-    input_directory = "/work/datasets/RUBBY/20240718_purchase/20240808/8.7筛图数据53011/2/房屋环境/"
-    output_directory = "/work/datasets/RUBBY/20240718_purchase/20240808/xml/"
+    input_directory = "/work/datasets/RUBBY/20240718_purchase/20240808/img/8.7筛图数据53011/2/房屋环境/"
+    output_directory = "/work/datasets/RUBBY/20240718_purchase/20240808/json/8.7筛图数据53011/2/房屋环境/"
 
     process_directory(input_directory, output_directory)
