@@ -98,13 +98,17 @@ def batch_process(input_folder, output_folder):
         if file_name.endswith('.json'):
             json_file = os.path.join(input_folder, file_name)
             img_file = os.path.join(input_folder, file_name.replace('.json', '.jpg'))
+            if not os.path.exists(img_file):
+                img_file = os.path.join(input_folder, file_name.replace('.json', '.png'))
             if os.path.exists(img_file):
                 process_json_to_xml(json_file, img_file, output_folder)
                 print(f'Processed: {file_name} and generated XML.')
+            else:
+                print("error lose img: ", img_file)
 
 
 # Example usage
-input_folder = '/work/datasets/RUBBY/20240718_purchase/20240722/labelme/house/'
-output_folder = '/work/datasets/RUBBY/20240718_purchase/20240722/labelme/house_xml/'
+input_folder = '/work/datasets/RUBBY/20240718_purchase/20240808/img/8.8数据10664/'
+output_folder = '/work/datasets/RUBBY/20240718_purchase/20240808/xml/8.8数据10664/'
 
 batch_process(input_folder, output_folder)
