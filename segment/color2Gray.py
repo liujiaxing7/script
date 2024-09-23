@@ -1,6 +1,5 @@
-from PIL import Image  # 注意：虽然导入了PIL，但在这个示例中并未使用
+from PIL import Image
 import cv2
-import os
 
 
 def resize_and_grayscale(image_path, output_path):
@@ -17,14 +16,13 @@ def resize_and_grayscale(image_path, output_path):
         return
 
         # 转换为灰度图像
-    # gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # gray_img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
 
     # resize图像到640x480
     resized_img = cv2.resize(img, (640, 480), interpolation=cv2.INTER_AREA)
 
     # 保存图像
     cv2.imwrite(output_path, resized_img)
-
 
 def process_images(input_file_path, output_folder):
     """
@@ -34,6 +32,7 @@ def process_images(input_file_path, output_folder):
     :param output_folder: 输出图像的文件夹路径
     """
     # 确保输出文件夹存在
+    import os
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
@@ -42,23 +41,19 @@ def process_images(input_file_path, output_folder):
         image_paths = file.readlines()
 
         # 遍历图像路径，处理每个图像
-    for path in image_paths:
+    for i, path in enumerate(image_paths):
         # 去除路径末尾的换行符
         path = path.strip()
-        # 构造输出路径，使用原始文件名（可能包含扩展名）
-        filename = os.path.basename(path)
-        output_path = os.path.join(output_folder, filename)
-
+        # 构造输出路径
+        output_path = os.path.join(output_folder, f"processed_{i}.jpg")
         # 处理图像
-        try:
-            resize_and_grayscale(path, output_path)
-            print(f"Processed {path} and saved as {output_path}")
-        except Exception as e:
-            print(f"Failed to process {path}: {e}")
 
-        # 示例用法
+        resize_and_grayscale(path, output_path)
+        print(f"Processed {path} and saved as {output_path}")
+
+    # 示例用法
 
 
-input_file_path = '/work/datasets/RUBBY/20240921_wire_negative/all.txt'  # 修改为你的图像路径文件
-output_folder = '/work/datasets/RUBBY/20240921_wire_negative/wire0921_resize_negative/'  # 修改为你的输出文件夹路径
+input_file_path = '/work/datasets/RUBBY/20240911_wire/all2.txt'  # 修改为你的图像路径文件
+output_folder = '/work/datasets/RUBBY/20240911_wire/tail526_resize/'  # 修改为你的输出文件夹路径
 process_images(input_file_path, output_folder)
