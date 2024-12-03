@@ -53,7 +53,7 @@ def filter_objects(root, class_thresholds):
         if name in class_thresholds:
             bndbox = obj.find("bndbox")
             area = calculate_area(bndbox)
-            threshold = class_thresholds[name]/IMG_SIZE
+            threshold = class_thresholds[name]
             if area < threshold:
                 root.remove(obj)
                 print(f"删除对象: {name}, 面积: {area} < 阈值: {threshold}")
